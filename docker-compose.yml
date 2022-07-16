@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  postgresql:
+    image: postgres:latest
+    container_name: welbex
+    ports:
+      - 5433:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=welbex
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+  frontend:
+    image: front
+    build:
+      context: ./client
+    ports:
+      - 3000:3000
+    depends_on:
+      - backend
+  backend:
+    image: server
+    build:
+      context: ./server
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgresql
